@@ -13,17 +13,20 @@ def parseCmd():
     (opts, args) = p.parse_args()
     return opts.ext
 
-def getInput():
+def getInput(ip):
     # Get auth
     print "Welcome to Sherlock IP finder."
     username = raw_input("Username: ")
     password = getpass.getpass()
-    idx= int(raw_input("Enter net interface: 1 - eth0, 2 - wlan0: "))
-    netif = ['eth0', 'wlan0']
-    # Get the IP address
-    f = os.popen('ifconfig '+ netif[idx-1] +' | grep "inet\ addr" | cut -d: -f2 | cut -d" " -f1')
-    your_ip = f.read()
-
+    if not ip:
+        idx= int(raw_input("Enter net interface: 1 - eth0, 2 - wlan0: "))
+        netif = ['eth0', 'wlan0']
+        # Get the IP address
+        f = os.popen('ifconfig '+ netif[idx-1] +' | grep "inet\ addr" | cut -d: -f2 | cut -d" " -f1')
+        your_ip = f.read()
+    else:
+        your_ip = ip
+        
     j = 0
     for i in range(3):
         j = your_ip.find('.', j+1)
@@ -61,6 +64,5 @@ def findMc(ip, username, password):
 
 if __name__ == '__main__':
     ip = parseCmd()
-    print ip
-    [ip, username, password] = getInput()
+    [ip, username, password] = getInput(ip)
     findMc(ip, username, password)
