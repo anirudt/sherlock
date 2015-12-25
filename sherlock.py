@@ -3,8 +3,15 @@ import getpass
 import os
 import re
 import paramiko, socket
+import optparse
 
-#def parseCmd():
+desc = ""
+
+def parseCmd():
+    p = optparse.OptionParser(description=desc)
+    p.add_option('-e', '--ext', dest='ext', default='', help=' take external subnet ip if required')
+    (opts, args) = p.parse_args()
+    return opts.ext
 
 def getInput():
     # Get auth
@@ -53,6 +60,7 @@ def findMc(ip, username, password):
 
 
 if __name__ == '__main__':
-    #ip, ret = parseCmd()
+    ip = parseCmd()
+    print ip
     [ip, username, password] = getInput()
     findMc(ip, username, password)
