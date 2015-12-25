@@ -5,7 +5,7 @@ import re
 import paramiko, socket
 import optparse
 
-desc = ""
+desc = "Quick automated tool developed to find your Linux machine using your credentials. For finding machines on the same subnet, just run sherlock without any arguments. For finding machines on another subnet of the same network, use the '-e' for options."
 
 def parseCmd():
     p = optparse.OptionParser(description=desc)
