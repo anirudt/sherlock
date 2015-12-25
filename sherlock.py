@@ -9,11 +9,14 @@ desc = "Quick automated tool developed to find your Linux machine using your cre
 
 def parseCmd():
     p = optparse.OptionParser(description=desc)
-    p.add_option('-e', '--ext', dest='ext', default='', help=' take external subnet ip if required')
+    p.add_option('-e', '--ext', dest='ext', default='', help='take external subnet ip if required')
+    p.add_option('-w', '--win', dest='win', default='', help='set = y if acting on a windows machine')
     (opts, args) = p.parse_args()
-    return opts.ext
+    return opts
 
-def getInput(ip):
+def getInput(opts):
+    ip = opts.ext
+    win = opts.win
     # Get auth
     print "Welcome to Sherlock IP finder."
     username = raw_input("Username: ")
@@ -31,12 +34,18 @@ def getInput(ip):
     for i in range(3):
         j = your_ip.find('.', j+1)
 
-    os.system('nmap -sP ' + your_ip[:j+1] + '* > /tmp/up.addr')
-    f = open('/tmp/up.addr', 'r').read()
+    if win:
+        ip = []
+        for i in range(2,256):
+            ip.append(your_ip[:j+1]+str(i))
 
-    pattern = r"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}"
-    patt = re.compile(pattern)
-    ip = patt.findall(f)
+    else:
+        os.system('nmap -sP ' + your_ip[:j+1] + '* > /tmp/up.addr')
+        f = open('/tmp/up.addr', 'r').read()
+
+        pattern = r"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}"
+        patt = re.compile(pattern)
+        ip = patt.findall(f)
     return [ip, username, password]
 
 def findMc(ip, username, password):
@@ -63,6 +72,6 @@ def findMc(ip, username, password):
 
 
 if __name__ == '__main__':
-    ip = parseCmd()
-    [ip, username, password] = getInput(ip)
+    opts = parseCmd()
+    [ip, username, password] = getInput(opts)
     findMc(ip, username, password)
