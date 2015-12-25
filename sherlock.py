@@ -8,9 +8,10 @@ import paramiko, socket
 print "Welcome to Sherlock IP finder."
 username = raw_input("Username: ")
 password = getpass.getpass()
-netif = raw_input("Enter net interface: eth0/wlan0")
+idx= int(raw_input("Enter net interface: 1 - eth0, 2 - wlan0: "))
+netif = ['eth0', 'wlan0']
 # Get the IP address
-f = os.popen('ifconfig '+ netif +' | grep "inet\ addr" | cut -d: -f2 | cut -d" " -f1')
+f = os.popen('ifconfig '+ netif[idx-1] +' | grep "inet\ addr" | cut -d: -f2 | cut -d" " -f1')
 your_ip = f.read()
 
 j = 0
@@ -20,7 +21,6 @@ for i in range(3):
 os.system('nmap -sP ' + your_ip[:j+1] + '* > /tmp/up.addr')
 f = open('/tmp/up.addr', 'r').read()
 
-gg = re.match(r"\d+\.\d+\.\d+\.\d+",f)
 pattern = r"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}"
 patt = re.compile(pattern)
 ip = patt.findall(f)
