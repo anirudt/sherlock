@@ -34,7 +34,7 @@ def getInput(opts):
     for i in range(3):
         j = your_ip.find('.', j+1)
 
-    if win:
+    if win == 'y' or win == 'Y':
         ip = []
         for i in range(2,256):
             ip.append(your_ip[:j+1]+str(i))
