@@ -11,6 +11,7 @@ def parseCmd():
     p = optparse.OptionParser(description=desc)
     p.add_option('-e', '--ext', dest='ext', default='', help='take external subnet ip if required')
     p.add_option('-w', '--win', dest='win', default='', help='set = y if acting on a windows machine')
+    p.add_option('-r', '--red', dest='red', action='store_true', default=False, help='redirects and connects you to the ssh connection')
     (opts, args) = p.parse_args()
     return opts
 
@@ -67,11 +68,16 @@ def findMc(ip, username, password):
         print ip_addr + " done"
     if i >= len(ip):
         print "Desired machine is not found"
+        return ""
     else:
         print "Your desired IP is " + ip[i]
+        return ip[i]
 
 
 if __name__ == '__main__':
     opts = parseCmd()
     [ip, username, password] = getInput(opts)
-    findMc(ip, username, password)
+    hostname = findMc(ip, username, password)
+    if opts.red:
+        print "Redirecting you to the SSH connection"
+        os.system('sshpass -p '+password+' ssh '+username+'@'+hostname)

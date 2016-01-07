@@ -20,6 +20,9 @@ $ ./sherlock.py -e 192.168.1.123
 # For finding machines while on a Windows machine
 $ ./sherlock.py -w=y -e 192.168.0.1
 
+# For directly connecting to the machine
+$ ./sherlock.py -r
+
 # For help
 $ ./sherlock.py -h
 ```
