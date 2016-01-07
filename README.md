@@ -2,6 +2,8 @@
 A tool to locate your Unix PC on the same network by using your credentials.
 There are essentially 2 modes of operation, either using nmap on Linux machines for searching, or using it on a Windows machine which may not have nmap.
 
+This is essentially in situations where ZeroConf may not be suitable. For systems compatible with ZeroConf, please visit the Avahi website.
+
 ##Package Dependencies
 - [paramiko](http://docs.paramiko.org/)
 - [nmap](https://nmap.org/)
