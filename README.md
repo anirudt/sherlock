@@ -7,6 +7,7 @@ This is essentially in situations where ZeroConf may not be suitable. For system
 ##Package Dependencies
 - [paramiko](http://docs.paramiko.org/)
 - [nmap](https://nmap.org/)
+- [sshpass](http://sourceforge.net/projects/sshpass/)
 
 ##Usage
 Clone the project in your directory. Ensure that the Python package dependencies are met.
