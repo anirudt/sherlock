@@ -4,8 +4,11 @@ import os
 import re
 import paramiko, socket
 import optparse
+from threading import Thread
 
 desc = "Quick automated tool developed to find your Linux machine using your credentials. For finding machines on the same subnet, just run sherlock without any arguments. For finding machines on another subnet of the same network, use the '-e' for options."
+
+found = None
 
 def parseCmd():
     p = optparse.OptionParser(description=desc)
@@ -49,30 +52,33 @@ def getInput(opts):
         ip = patt.findall(f)
     return [ip, username, password]
 
-def findMc(ip, username, password):
-    i = 1
-    while i < len(ip):
-        ip_addr = ip[i]
-        try:
-            ssh = paramiko.SSHClient()
-            ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy()) 
-            print "Trying for " + ip_addr + '....'
-            ssh.connect(ip_addr, username=username, password=password)
-            print "Connected."
-            break
-        except (paramiko.ssh_exception.BadHostKeyException, paramiko.ssh_exception.AuthenticationException,
-                paramiko.ssh_exception.SSHException, socket.error) as e:
-            print e
-            i+=1
-            continue
-        print ip_addr + " done"
-    if i >= len(ip):
-        print "Desired machine is not found"
-        return ""
-    else:
-        print "Your desired IP is " + ip[i]
-        return ip[i]
+def worker(host, username, password):
+    global found
+    try:
+        ssh = paramiko.SSHClient()
+        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        print "Trying for " + host + " ...."
+        ssh.connect(host, username = username, password = password)
+        print "Connected for " + host
+        found = host
+        return True
+    except (paramiko.ssh_exception.BadHostKeyException, paramiko.ssh_exception.AuthenticationException,
+            paramiko.ssh_exception.SSHException, socket.error) as e:
+        print e
+        return False
 
+def findMc(ip, username, password):
+    threads = []
+    for host in ip:
+        t = Thread(target=worker, args = (host, username, password))
+        t.start()
+        threads.append(t)
+    
+    for t in threads:
+        t.join()
+
+    if found is not None:
+        print "The correct destination is " + found
 
 if __name__ == '__main__':
     opts = parseCmd()
