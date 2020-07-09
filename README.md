@@ -9,6 +9,13 @@ This is essentially in situations where ZeroConf may not be suitable. For system
 - [nmap](https://nmap.org/)
 - [sshpass](http://sourceforge.net/projects/sshpass/)
 
+## Installing Dependencies
+```
+$ sudo apt-get install nmap
+$ python3 -m pip install paramiko --user
+```
+Can ignore the install.sh script for now, please raise an issue for any concerns.
+
 ## Usage
 Clone the project in your directory. Ensure that the Python package dependencies are met.
 
